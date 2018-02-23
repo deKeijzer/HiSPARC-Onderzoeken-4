@@ -16,14 +16,18 @@ def download_data():
     Slaat de data op in data_file
     :return:
     """
+    station_number = 501
     start = datetime.datetime(2016, 1, 1)
     end = datetime.datetime(2016, 1, 2)
-    data = tables.open_file(dir+data_file+file_extension, 'w')
-    esd.download_data(data, '/s501', 501, start, end)
+
+    # Kijkt of het bestand al open is
+    if 'data' not in globals():
+        data = tables.open_file(dir+data_file+file_extension, 'w')
+    # Kijkt of de data van station_number al bestaat
+    if '/s'+str(station_number) not in data:
+        esd.download_data(data, '/s'+str(station_number), station_number, start, end)
 
 download_data()
-
-
 
 
 
