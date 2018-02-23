@@ -1,6 +1,7 @@
 import tables
-from pylab import *
-
+#from pylab import *
+import matplotlib.pyplot as plt
+import numpy as np
 
 dir = 'directions_for_coincidences\\'
 
@@ -12,9 +13,9 @@ def plot_zenith_distribution(data):
     zenith = events.col('zenith')
 
     # remove all NaNs.
-    zenith = zenith.compress(~isnan(zenith))
+    zenith = zenith.compress(~np.isnan(zenith))
 
-    plt.hist(degrees(zenith), bins=linspace(0, 90, 51), histtype='step')
+    plt.hist(zenith)
     plt.xlabel("zenith [deg]")
     plt.ylabel("count")
     plt.show()
