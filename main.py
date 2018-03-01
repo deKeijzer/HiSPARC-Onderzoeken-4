@@ -8,23 +8,46 @@ import numpy as np
 
 dir = 'data\directions_for_coincidences\\'
 DATAFILE = dir+'data.h5'
-STATIONS = [501, 503, 506]
+#STATIONS = [501, 503, 506]
+STATIONS = [501]
 START = datetime.datetime(2016, 1, 1)
 END = datetime.datetime(2016, 1, 2)
 
+df = pd.DataFrame()
 
-def plot_zenith_distribution(data):
+
+def create_df(data):
+    global df
     events = data.root.coincidences.reconstructions
 
     # get all zenith values
     zenith = events.col('zenith')
+    azimuth = events.col('azimuth')
 
-    # remove all NaNs.
-    zenith = zenith.compress(~np.isnan(zenith))
+    id = events.col('id')
 
-    plt.hist(zenith)
+    df = pd.DataFrame()
+    df['id'] = id
+    df['zenith'] = zenith
+    df['azimuth'] = azimuth
+
+    df = df.dropna()
+    print(df)
+
+
+def plot_hoeken():
+    plt.figure(1)
+    plt.subplot(211)
+    plt.hist(df['zenith'])
     plt.xlabel("zenith [deg]")
     plt.ylabel("count")
+
+    plt.subplot(212)
+    plt.hist(df['azimuth'])
+    plt.xlabel("azimuth [deg]")
+    plt.ylabel("count")
+
+    plt.tight_layout()
     plt.show()
 
 
@@ -52,4 +75,6 @@ if __name__ == '__main__':
     #    rec = reconstructions.ReconstructESDCoincidences(data)
     #    rec.reconstruct_and_store()
 
-plot_zenith_distribution(data)
+
+create_df(data)
+plot_hoeken()
