@@ -20,19 +20,24 @@ def create_df(data):
     global df
     events = data.root.coincidences.reconstructions
 
-    # get all zenith values
     zenith = events.col('zenith')
     azimuth = events.col('azimuth')
-
+    ext_timestamp = events.col('ext_timestamp')
     id = events.col('id')
 
     df = pd.DataFrame()
     df['id'] = id
+    df['ext_timestamp'] = ext_timestamp
     df['zenith'] = zenith
     df['azimuth'] = azimuth
 
     df = df.dropna()
+
     print(df)
+
+
+def save_df():
+    df.to_csv('data\\heatmap_data.csv', sep='\t')
 
 
 def plot_hoeken():
@@ -48,6 +53,10 @@ def plot_hoeken():
     plt.ylabel("count")
 
     plt.tight_layout()
+    plt.show()
+
+def heatmap():
+    plt.plot(df['zenith'], df['azimuth'], '.')
     plt.show()
 
 
@@ -77,4 +86,4 @@ if __name__ == '__main__':
 
 
 create_df(data)
-plot_hoeken()
+save_df()
