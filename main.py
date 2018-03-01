@@ -9,7 +9,7 @@ import numpy as np
 dir = 'data\directions_for_coincidences\\'
 DATAFILE = dir+'data.h5'
 #STATIONS = [501, 503, 506]
-STATIONS = [501]
+STATIONS = [501, 502, 503, 505, 506, 508, 509, 510, 511]
 START = datetime.datetime(2016, 1, 1)
 END = datetime.datetime(2016, 1, 2)
 
@@ -40,26 +40,6 @@ def save_df():
     df.to_csv('data\\heatmap_data.csv', sep='\t')
 
 
-def plot_hoeken():
-    plt.figure(1)
-    plt.subplot(211)
-    plt.hist(df['zenith'])
-    plt.xlabel("zenith [deg]")
-    plt.ylabel("count")
-
-    plt.subplot(212)
-    plt.hist(df['azimuth'])
-    plt.xlabel("azimuth [deg]")
-    plt.ylabel("count")
-
-    plt.tight_layout()
-    plt.show()
-
-def heatmap():
-    plt.plot(df['zenith'], df['azimuth'], '.')
-    plt.show()
-
-
 def print_data():
     """
     Print de datafile om inzicht te krijgen in de inhoud ervan
@@ -69,8 +49,8 @@ def print_data():
     print(store)
     store.close()
 
+#print_data()
 
-print_data()
 
 if __name__ == '__main__':
     if 'data' not in globals():
@@ -80,9 +60,9 @@ if __name__ == '__main__':
     if '/coincidences' not in data:
         esd.download_coincidences(data, stations=STATIONS, start=START, end=END)
 
-    #if '/reconstructions' not in data:
-    #    rec = reconstructions.ReconstructESDCoincidences(data)
-    #    rec.reconstruct_and_store()
+    if '/reconstructions' not in data:
+        rec = reconstructions.ReconstructESDCoincidences(data)
+        rec.reconstruct_and_store()
 
 
 create_df(data)
