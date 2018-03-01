@@ -1,6 +1,7 @@
 import datetime
 import tables
 from sapphire import esd
+import pandas as pd
 
 dir = 'coincidences\\'
 DATAFILE = dir+'data.h5'
@@ -15,3 +16,6 @@ if __name__ == '__main__':
 
     if '/coincidences' not in data:
         esd.download_coincidences(data, stations=STATIONS, start=START, end=END)
+
+print('-----------')
+print(data)

@@ -1,6 +1,7 @@
 import datetime
 import tables
 from sapphire import esd
+import pandas as pd
 
 dir = 'event_summary_data\\'
 DATAFILE = dir+'data.h5'
@@ -17,3 +18,8 @@ if __name__ == '__main__':
         group = '/s%d' % station
         if group not in data:
             esd.download_data(data, group, station, START, END)
+
+store = pd.HDFStore(DATAFILE)
+print(store)
+print('-----------')
+#print(data)

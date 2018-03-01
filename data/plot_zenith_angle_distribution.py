@@ -2,9 +2,13 @@ import tables
 #from pylab import *
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 
 dir = 'directions_for_coincidences\\'
+DATAFILE = dir+'data.h5'
 
+store = pd.HDFStore(DATAFILE)
+print(store)
 
 def plot_zenith_distribution(data):
     events = data.root.coincidences.reconstructions
@@ -23,6 +27,6 @@ def plot_zenith_distribution(data):
 
 if __name__ == '__main__':
     if 'data' not in globals():
-        data = tables.open_file(dir+'data.h5')
+        data = tables.open_file(DATAFILE)
+    #plot_zenith_distribution(data)
 
-    plot_zenith_distribution(data)
