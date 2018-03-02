@@ -1,3 +1,8 @@
+"""
+Bron van de code: https://github.com/HiSPARC/infopakket/blob/master/notebooks/10_sterrenkaart.md
+Merk op dat hier en daar iets is aangepast
+"""
+
 # dit notebook werkt onder Python 2 en 3
 from __future__ import division, print_function
 
@@ -13,9 +18,9 @@ import os
 
 DATAFILE = 'coinc.h5'
 STATIONS = [501, 502, 503, 505, 506, 508, 509, 510, 511]
-START = datetime(2016, 1, 1)
-END = datetime(2016, 1, 2)
-N = 1
+START = datetime(2017, 1, 1)
+END = datetime(2018, 1, 1)
+N = 7
 overwrite = False
 if __name__ == '__main__':
     if overwrite:
@@ -160,8 +165,8 @@ def plot_events_polar(events, filename=None):
     plt.show()
 
 
-plot_events_on_mollweide(events, filename='noordelijke hemel mollweide.png')
+plot_events_on_mollweide(events, filename='figuren\\noordelijke hemel mollweide.png')
 
-plot_events_polar(events, filename='noordelijke hemel polar.png')
+plot_events_polar(events, filename='figuren\\noordelijke hemel polar.png')
 
 data.close()
