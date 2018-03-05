@@ -18,13 +18,13 @@ import os
 
 DATAFILE = 'coinc.h5'
 # STATIONS = [501, 502, 503, 505, 506, 508, 509, 510, 511]
-STATIONS = [501, 502]
+STATIONS = [501, 502, 503]
 
 # 2017 1 1 naar 2017 1 2 met N=9 geeft mooie resultaten met stations 501 502 503 505
-START = datetime(2017, 1, 1)
-END = datetime(2017, 2, 1)
-N = 1
-overwrite = True
+START = datetime(2016, 4, 1)
+END = datetime(2018, 1, 1)
+N = 3
+overwrite = False
 
 if __name__ == '__main__':
     if overwrite:
@@ -67,7 +67,7 @@ for rec in pbar(recs):
     events.append((r-np.pi, d))
 events = np.array(events)
 
-ra = np.degrees(events[:,0])
+ra = np.degrees(events[:, 0])
 
 dec = np.degrees(events[:, 1])
 
