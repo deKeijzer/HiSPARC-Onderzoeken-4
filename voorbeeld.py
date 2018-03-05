@@ -17,11 +17,15 @@ from sapphire.transformations.celestial import zenithazimuth_to_equatorial
 import os
 
 DATAFILE = 'coinc.h5'
-STATIONS = [501, 502, 503, 505, 506, 508, 509, 510, 511]
+# STATIONS = [501, 502, 503, 505, 506, 508, 509, 510, 511]
+STATIONS = [501, 502]
+
+# 2017 1 1 naar 2017 1 2 met N=9 geeft mooie resultaten met stations 501 502 503 505
 START = datetime(2017, 1, 1)
-END = datetime(2018, 1, 1)
-N = 7
-overwrite = False
+END = datetime(2017, 2, 1)
+N = 1
+overwrite = True
+
 if __name__ == '__main__':
     if overwrite:
         try:
