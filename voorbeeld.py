@@ -21,10 +21,10 @@ DATAFILE = 'coinc.h5'
 STATIONS = [501, 502, 503]
 
 # 2017 1 1 naar 2017 1 2 met N=9 geeft mooie resultaten met stations 501 502 503 505
-START = datetime(2016, 4, 1)
-END = datetime(2018, 1, 1)
+START = datetime(2017, 1, 1)
+END = datetime(2017, 5, 1)
 N = 3
-overwrite = False
+overwrite = True
 
 if __name__ == '__main__':
     if overwrite:
@@ -117,15 +117,33 @@ def plot_events_on_mollweide(events, filename=None):
     # plot reconstructions
     #ax.scatter(-events[:,0], events[:,1], marker='x')
 
-    from scipy.stats.kde import gaussian_kde
+    #from scipy.stats.kde import gaussian_kde
 
+    #x = -events[:,0]
+    #y = events[:,1]
+    #k = gaussian_kde(np.vstack([x, y]))
+    #xi, yi = np.mgrid[x.min():x.max():x.size ** 0.5 * 1j, y.min():y.max():y.size ** 0.5 * 1j]
+    #zi = k(np.vstack([xi.flatten(), yi.flatten()]))
+
+    #ax.pcolormesh(xi, yi, zi.reshape(xi.shape), alpha=0.5)
+
+    # https://python-graph-gallery.com/85-density-plot-with-matplotlib/
+
+    from scipy.stats import kde
     x = -events[:,0]
     y = events[:,1]
-    k = gaussian_kde(np.vstack([x, y]))
-    xi, yi = np.mgrid[x.min():x.max():x.size ** 0.5 * 1j, y.min():y.max():y.size ** 0.5 * 1j]
+
+    # Evaluate a gaussian kde on a regular grid of nbins x nbins over data extents
+    nbins = 300
+    k = kde.gaussian_kde([x, y])
+    xi, yi = np.mgrid[x.min():x.max():nbins * 1j, y.min():y.max():nbins * 1j]
     zi = k(np.vstack([xi.flatten(), yi.flatten()]))
 
-    ax.pcolormesh(xi, yi, zi.reshape(xi.shape), alpha=0.5)
+    # Make the plot
+    plt.pcolormesh(xi, yi, zi.reshape(xi.shape))
+    #plt.pcolormesh(xi, yi, zi.reshape(xi.shape), cmap=plt.cm.Greens_r)
+    plt.colorbar()
+    plt.show()
 
     if filename:
         plt.savefig(filename, dpi=200)
@@ -171,6 +189,6 @@ def plot_events_polar(events, filename=None):
 
 plot_events_on_mollweide(events, filename='figuren\\noordelijke hemel mollweide.png')
 
-plot_events_polar(events, filename='figuren\\noordelijke hemel polar.png')
+#plot_events_polar(events, filename='figuren\\noordelijke hemel polar.png')
 
 data.close()
