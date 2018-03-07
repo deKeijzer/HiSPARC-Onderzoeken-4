@@ -18,13 +18,13 @@ import os
 
 DATAFILE = 'coinc.h5'
 # STATIONS = [501, 502, 503, 505, 506, 508, 509, 510, 511]
-STATIONS = [501, 502, 503]
+STATIONS = [505, 509, 504, 502]
 
 # 2017 1 1 naar 2017 1 2 met N=9 geeft mooie resultaten met stations 501 502 503 505
-START = datetime(2017, 1, 1)
-END = datetime(2017, 5, 1)
-N = 3
-overwrite = True
+START = datetime(2012, 2, 1)
+END = datetime(2018, 3, 1)
+N = 4
+overwrite = False
 
 if __name__ == '__main__':
     if overwrite:
@@ -114,21 +114,10 @@ def plot_events_on_mollweide(events, filename=None):
     # plot Galactic Center (RA 17h45, DEC -29)
     ax.scatter(-np.radians(17.75 / 24 * 360 - 180.), np.radians(-29), color='red', marker='*')
 
-    # plot reconstructions
-    #ax.scatter(-events[:,0], events[:,1], marker='x')
-
-    #from scipy.stats.kde import gaussian_kde
-
-    #x = -events[:,0]
-    #y = events[:,1]
-    #k = gaussian_kde(np.vstack([x, y]))
-    #xi, yi = np.mgrid[x.min():x.max():x.size ** 0.5 * 1j, y.min():y.max():y.size ** 0.5 * 1j]
-    #zi = k(np.vstack([xi.flatten(), yi.flatten()]))
-
-    #ax.pcolormesh(xi, yi, zi.reshape(xi.shape), alpha=0.5)
-
-    # https://python-graph-gallery.com/85-density-plot-with-matplotlib/
-
+    """
+    Plot bron:
+    https://python-graph-gallery.com/85-density-plot-with-matplotlib/
+    """
     from scipy.stats import kde
     x = -events[:,0]
     y = events[:,1]

@@ -18,15 +18,15 @@ import os
 
 # 2017 1 1 naar 2017 1 2 met N=9 geeft mooie resultaten met stations 501 502 503 505
 
-START = datetime(2011, 1, 1)
-END = datetime(2012, 1, 1)
+START = datetime(2012, 2, 1)
+END = datetime(2018, 3, 1)
 N = 3
 
-file_name = 'test'
+file_name = 'science_park4 verste langst'
 dir = 'data\\coincidences\\'
 DATAFILE = dir+file_name+'.h5'
 # STATIONS = [501, 502, 503, 505, 506, 508, 509, 510, 511]
-STATIONS = [501, 502, 503]
+STATIONS = [505, 509, 504, 502]
 
 overwrite = True
 
