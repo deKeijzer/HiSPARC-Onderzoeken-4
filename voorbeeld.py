@@ -17,7 +17,6 @@ from sapphire.transformations.celestial import zenithazimuth_to_equatorial
 import os
 import time
 import seaborn as sns
-import ephem
 
 t0 = time.time()
 
@@ -26,10 +25,10 @@ STATIONS = [501, 502, 503, 505, 506, 508, 509, 510, 511]
 #STATIONS = [305, 304, 301]  # 1,75 km uit elkaar
 
 START = datetime(2017, 1, 1)
-END = datetime(2017, 1, 5)
+END = datetime(2017, 1, 2)
 N = 1  # Voor reconstructions minimum N=3
 
-force_datafile_overwrite = False
+force_datafile_overwrite = True
 
 if __name__ == '__main__':
     if force_datafile_overwrite:
@@ -116,8 +115,12 @@ def plot_events_on_mollweide(events, filename=None):
     #fig = plt.figure()
     ax = fig.add_subplot(111, projection="mollweide")
     # let op: De RA as is gespiegeld:
-    ax.set_xticklabels(['22h', '20h', '18h', '16h', '14h', '12h', '10h', '8h', '6h', '4h', '2h'], fontsize='large')
+    ax.set_xticklabels(['22', '20', '18', '16', '14', '12', '10', '8', '6', '4', '2'], fontsize='large')
+    ax.set_yticklabels(['-75', '-60', '-45', '-30', '-15', '0', '15', '30', '45', '60', '75'], fontsize='large')
     ax.grid(True)
+    ax.tick_params(axis='x', colors='white')
+    ax.xaxis.label.set_color('white')
+    ax.xaxis.set_label_coords(.5, .49)
 
     """
     Plot bron:
@@ -143,7 +146,7 @@ def plot_events_on_mollweide(events, filename=None):
 
     """
     plt.pcolormesh(xi, yi, zi.reshape(xi.shape), cmap=plt.cm.jet, alpha=1)
-    plt.colorbar(orientation='horizontal')
+    plt.colorbar(shrink=0.5, pad=0.01)
 
     # plot milky way contours
     for ra_mw, dec_mw in mw_contour:
@@ -156,28 +159,20 @@ def plot_events_on_mollweide(events, filename=None):
     ax.scatter(-ra_uma, dec_uma, color='white', s=10)
 
     # plot Polaris
-    ax.scatter(0., np.radians(90.), color='red')
+    #ax.scatter(0., np.radians(90.), color='white', marker='*')
+    #ax.text(np.radians(2.), np.radians(78.), 'Polaris', color='white', fontsize='10')
 
     # plot Galactic Center (RA 17h45, DEC -29)
-    ax.scatter(-np.radians(17.75 / 24 * 360 - 180.), np.radians(-29), color='red', marker='*')
-
-    # Galactic plane toevoegen
-    lon_array = np.arange(0, 360)
-    lat = 0.
-    eq_array = np.zeros((360, 2))
-    for lon in lon_array:
-        ga = ephem.Galactic(np.radians(lon), np.radians(lat))
-        eq = ephem.Equatorial(ga)
-        eq_array[lon] = np.degrees(eq.get())
-    RA = eq_array[:, 0]
-    Dec = eq_array[:, 1]
-    ax.scatter(RA, Dec)
-
+    #ax.scatter(-np.radians(17.75 / 24 * 360 - 180.), np.radians(-29), color='white', marker='*')
+    #ax.text(-np.radians(17.75 / 24 * 360 - 180. +2.), np.radians(-29 - 6.), 'Galactic Center', color='white', fontsize='10')
 
     t3 = time.time()
     print('Plotting took: %.2f' % (t3-t2))
     print('Total run time: %.2f' % (t3 - t0))
     plt.grid(alpha=.2)
+    plt.xlabel('Rechte klimming [h]')
+    plt.ylabel('Declinatie [°]')
+    plt.tight_layout()
     plt.show()
 
     if filename:
