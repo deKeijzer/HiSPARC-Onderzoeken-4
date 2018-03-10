@@ -18,15 +18,15 @@ import os
 
 # 2017 1 1 naar 2017 1 2 met N=9 geeft mooie resultaten met stations 501 502 503 505
 
-START = datetime(2016, 12, 1)
+START = datetime(2016, 1, 1)
 END = datetime(2017, 1, 1)
-N = 2
+N = 9
 
 file_name = 'coinc'
 dir = 'data\\coincidences\\'
 DATAFILE = dir+file_name+'.h5'
-# STATIONS = [501, 502, 503, 505, 506, 508, 509, 510, 511]
-STATIONS = [505, 509]
+STATIONS = [501, 502, 503, 505, 506, 508, 509, 510, 511]
+#STATIONS = [505, 509]
 
 overwrite = True
 reconstruct = False

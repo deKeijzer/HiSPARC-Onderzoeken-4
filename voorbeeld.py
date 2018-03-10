@@ -16,18 +16,19 @@ from sapphire.utils import pbar
 from sapphire.transformations.celestial import zenithazimuth_to_equatorial
 import os
 import time
+import seaborn as sns
 
 t0 = time.time()
 
 DATAFILE = 'coinc.h5'
-# STATIONS = [501, 502, 503, 505, 506, 508, 509, 510, 511]
-STATIONS = [305, 304, 301]  # 1,75 km uit elkaar
+STATIONS = [501, 502, 503, 505, 506, 508, 509, 510, 511]
+#STATIONS = [305, 304, 301]  # 1,75 km uit elkaar
 
 START = datetime(2017, 1, 1)
-END = datetime(2018, 1, 1)
-N = 3  # Voor reconstructions minimum N=3
+END = datetime(2017, 1, 5)
+N = 1  # Voor reconstructions minimum N=3
 
-force_datafile_overwrite = True
+force_datafile_overwrite = False
 
 if __name__ == '__main__':
     if force_datafile_overwrite:
@@ -108,12 +109,40 @@ def plot_events_on_mollweide(events, filename=None):
     # geplot.
 
     events = np.array(events)
+    print(events)
 
     fig = plt.figure(figsize=(15, 15))
+    #fig = plt.figure()
     ax = fig.add_subplot(111, projection="mollweide")
     # let op: De RA as is gespiegeld:
     ax.set_xticklabels(['22h', '20h', '18h', '16h', '14h', '12h', '10h', '8h', '6h', '4h', '2h'], fontsize='large')
     ax.grid(True)
+
+    """
+    Plot bron:
+    https://python-graph-gallery.com/85-density-plot-with-matplotlib/
+    """
+    from scipy.stats import kde
+    x = -events[:, 0]
+    y = events[:, 1]
+
+    # Evaluate a gaussian kde on a regular grid of nbins x nbins over data extents
+    nbins = 100
+    k = kde.gaussian_kde([x, y])
+    xi, yi = np.mgrid[x.min():x.max():nbins * 1j, y.min():y.max():nbins * 1j]
+    zi = k(np.vstack([xi.flatten(), yi.flatten()]))
+
+    # Make the plot
+    # ax.scatter(-events[:, 0], events[:, 1], marker='x')
+    # plt.pcolormesh(xi, yi, zi.reshape(xi.shape))
+    # plt.pcolormesh(xi, yi, zi.reshape(xi.shape), cmap=plt.cm.Greens_r)
+    """ 
+    Colormaps: https://matplotlib.org/examples/color/colormaps_reference.html
+    jet
+
+    """
+    plt.pcolormesh(xi, yi, zi.reshape(xi.shape), cmap=plt.cm.jet, alpha=1)
+    plt.colorbar()
 
     # plot milky way contours
     for ra_mw, dec_mw in mw_contour:
@@ -122,8 +151,8 @@ def plot_events_on_mollweide(events, filename=None):
     # plot steelpan in UMa
     ra_uma = np.radians(steelpan[:, 0] / 24 * 360 - 180.)
     dec_uma = np.radians(steelpan[:, 1])
-    ax.plot(-ra_uma, dec_uma, color='red')
-    ax.scatter(-ra_uma, dec_uma, color='red')
+    ax.plot(-ra_uma, dec_uma, color='white')
+    ax.scatter(-ra_uma, dec_uma, color='white', s=10)
 
     # plot Polaris
     ax.scatter(0., np.radians(90.), color='red')
@@ -131,25 +160,6 @@ def plot_events_on_mollweide(events, filename=None):
     # plot Galactic Center (RA 17h45, DEC -29)
     ax.scatter(-np.radians(17.75 / 24 * 360 - 180.), np.radians(-29), color='red', marker='*')
 
-    """
-    Plot bron:
-    https://python-graph-gallery.com/85-density-plot-with-matplotlib/
-    """
-    from scipy.stats import kde
-    x = -events[:,0]
-    y = events[:,1]
-
-    # Evaluate a gaussian kde on a regular grid of nbins x nbins over data extents
-    nbins = 300
-    k = kde.gaussian_kde([x, y])
-    xi, yi = np.mgrid[x.min():x.max():nbins * 1j, y.min():y.max():nbins * 1j]
-    zi = k(np.vstack([xi.flatten(), yi.flatten()]))
-
-    # Make the plot
-    plt.pcolormesh(xi, yi, zi.reshape(xi.shape))
-    ax.scatter(-events[:, 0], events[:, 1], marker='x')
-    #plt.pcolormesh(xi, yi, zi.reshape(xi.shape), cmap=plt.cm.Greens_r)
-    plt.colorbar()
     t3 = time.time()
     print('Plotting took: %.2f' % (t3-t2))
     print('Total run time: %.2f' % (t3 - t0))
