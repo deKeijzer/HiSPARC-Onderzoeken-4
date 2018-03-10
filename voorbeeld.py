@@ -15,17 +15,19 @@ from sapphire import (download_coincidences, ReconstructESDCoincidences, HiSPARC
 from sapphire.utils import pbar
 from sapphire.transformations.celestial import zenithazimuth_to_equatorial
 import os
+import time
+
+t0 = time.time()
 
 DATAFILE = 'coinc.h5'
 # STATIONS = [501, 502, 503, 505, 506, 508, 509, 510, 511]
-STATIONS = [505, 509, 504]
+STATIONS = [305, 304, 301]  # 1,75 km uit elkaar
 
-# 2017 1 1 naar 2017 1 2 met N=9 geeft mooie resultaten met stations 501 502 503 505
-START = datetime(2016, 10, 1)
-END = datetime(2017, 1, 1)
-N = 3 # Voor reconstructions minimum N=3
+START = datetime(2016, 12, 1)
+END = datetime(2018, 3, 1)
+N = 3  # Voor reconstructions minimum N=3
 
-force_datafile_overwrite = False
+force_datafile_overwrite = True
 
 if __name__ == '__main__':
     if force_datafile_overwrite:
@@ -52,6 +54,10 @@ if __name__ == '__main__':
     if len(data.root.coincidences.reconstructions.read()) == 0:
         print('Aantel recs == 0, exit()')
         exit()
+
+t1 = time.time()
+print('Datafile preperation took: %.2f' % (t1-t0))
+
 
 print("Aantal showers (coincidenties n=%d stations): %d " % (N, len(data.root.coincidences.coincidences)))
 
@@ -90,6 +96,9 @@ try:
     mw_contour_polar = np.load('milky_way_polar.npy')
 except:
     mw_contour = mw_contour_polar = []
+
+t2 = time.time()
+print('Getting to the plots took: %.2f' % (t2-t1))
 
 
 def plot_events_on_mollweide(events, filename=None):
@@ -138,8 +147,12 @@ def plot_events_on_mollweide(events, filename=None):
 
     # Make the plot
     plt.pcolormesh(xi, yi, zi.reshape(xi.shape))
+    ax.scatter(-events[:, 0], events[:, 1], marker='x')
     #plt.pcolormesh(xi, yi, zi.reshape(xi.shape), cmap=plt.cm.Greens_r)
     plt.colorbar()
+    t3 = time.time()
+    print('Plotting took: %.2f' % (t3-t2))
+    print('Total run time: %.2f' % (t3 - t0))
     plt.show()
 
     if filename:
