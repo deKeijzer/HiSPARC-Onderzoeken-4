@@ -18,7 +18,7 @@ import os
 
 # 2017 1 1 naar 2017 1 2 met N=9 geeft mooie resultaten met stations 501 502 503 505
 
-START = datetime(2016, 1, 1)
+START = datetime(2016, 3, 1)
 END = datetime(2017, 1, 1)
 N = 9
 

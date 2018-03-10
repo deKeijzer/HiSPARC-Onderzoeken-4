@@ -17,6 +17,7 @@ from sapphire.transformations.celestial import zenithazimuth_to_equatorial
 import os
 import time
 import seaborn as sns
+import ephem
 
 t0 = time.time()
 
@@ -142,7 +143,7 @@ def plot_events_on_mollweide(events, filename=None):
 
     """
     plt.pcolormesh(xi, yi, zi.reshape(xi.shape), cmap=plt.cm.jet, alpha=1)
-    plt.colorbar()
+    plt.colorbar(orientation='horizontal')
 
     # plot milky way contours
     for ra_mw, dec_mw in mw_contour:
@@ -160,51 +161,27 @@ def plot_events_on_mollweide(events, filename=None):
     # plot Galactic Center (RA 17h45, DEC -29)
     ax.scatter(-np.radians(17.75 / 24 * 360 - 180.), np.radians(-29), color='red', marker='*')
 
+    # Galactic plane toevoegen
+    lon_array = np.arange(0, 360)
+    lat = 0.
+    eq_array = np.zeros((360, 2))
+    for lon in lon_array:
+        ga = ephem.Galactic(np.radians(lon), np.radians(lat))
+        eq = ephem.Equatorial(ga)
+        eq_array[lon] = np.degrees(eq.get())
+    RA = eq_array[:, 0]
+    Dec = eq_array[:, 1]
+    ax.scatter(RA, Dec)
+
+
     t3 = time.time()
     print('Plotting took: %.2f' % (t3-t2))
     print('Total run time: %.2f' % (t3 - t0))
+    plt.grid(alpha=.2)
     plt.show()
 
     if filename:
         plt.savefig(filename, dpi=200)
-
-def plot_events_polar(events, filename=None):
-    """Plot events (een lijst van RA, DEC paren) op een hemelkaart van de noordelijke hemel"""
-
-    # Let op: De RA-as is gespiegeld. Alle RA coordinates worden gespiegeld (negatief)
-    # geplot.
-
-    events = np.array(events)
-
-    fig = plt.figure(figsize=(15,15))
-    ax = fig.add_subplot(111, projection="polar")
-
-    # let op: De RA as is gespiegeld:
-    ax.set_xticklabels(['12h', '9h', '6h', '3h', '0h', '21h', '18h', '15h'], fontsize='large')
-    ax.set_yticklabels(['80', '70', '60', '50', '40', '30', '20', '10', '0'])
-
-    ax.grid(True)
-    ax.set_theta_zero_location("W")
-
-
-    # plot milky way contours
-    for ra_mw, dec_mw in mw_contour_polar:
-        ax.plot(-ra_mw, 90. - np.degrees(dec_mw), color='grey')
-
-    # plot UMa
-    ra_uma = np.radians(steelpan[:, 0] / 24 * 360 - 180)
-    dec_uma = np.radians(steelpan[:, 1])
-    ax.plot(-ra_uma, 90. - np.degrees(dec_uma), color='red')
-    ax.scatter(-ra_uma, 90. - np.degrees(dec_uma), color='red')
-    # plot Polaris
-    ax.scatter(0., 0., color='red')
-
-    # plot reconstructions
-    ax.scatter(-events[:,0], 90. - np.degrees(events[:,1]), marker='x')
-    ax.set_rmax(90.0)
-    if filename:
-        plt.savefig(filename, dpi=200)
-    plt.show()
 
 
 plot_events_on_mollweide(events, filename='figuren\\noordelijke hemel mollweide.png')
