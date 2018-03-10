@@ -1,12 +1,12 @@
 """
-Bron van de code: https://github.com/HiSPARC/infopakket/blob/master/notebooks/10_sterrenkaart.md
+Bron van de code welke gebruikt is als basis:
+https://github.com/HiSPARC/infopakket/blob/master/notebooks/10_sterrenkaart.md
+
 Merk op dat hier en daar iets is aangepast
 """
 
-# dit notebook werkt onder Python 2 en 3
 from __future__ import division, print_function
 
-# importeer modules en functies
 from datetime import datetime
 import numpy as np
 import matplotlib.pyplot as plt
@@ -16,19 +16,25 @@ from sapphire.utils import pbar
 from sapphire.transformations.celestial import zenithazimuth_to_equatorial
 import os
 import time
-import seaborn as sns
 
 t0 = time.time()
 
 DATAFILE = 'coinc.h5'
-STATIONS = [501, 502, 503, 505, 506, 508, 509, 510, 511]
+#STATIONS = [501, 502, 503, 505, 506, 508, 509, 510, 511]
 #STATIONS = [305, 304, 301]  # 1,75 km uit elkaar
 
-START = datetime(2017, 1, 1)
-END = datetime(2017, 1, 2)
-N = 1  # Voor reconstructions minimum N=3
+"""
+Waarschijnlijk moeten stations uit nijmegen gebruikt worden, deze zijn het oudst
+"""
+
+STATIONS = [8001, 8004, 8009, 8008]
+
+START = datetime(2014, 3, 1)
+END = datetime(2017, 6, 2)
+N = 4  # Voor reconstructions minimum N=3
 
 force_datafile_overwrite = True
+show_events = True
 
 if __name__ == '__main__':
     if force_datafile_overwrite:
@@ -59,7 +65,6 @@ if __name__ == '__main__':
 t1 = time.time()
 print('Datafile preperation took: %.2f' % (t1-t0))
 
-
 print("Aantal showers (coincidenties n=%d stations): %d " % (N, len(data.root.coincidences.coincidences)))
 
 recs = data.root.coincidences.reconstructions.read()
@@ -67,7 +72,6 @@ theta = recs['zenith']
 recs = recs.compress(~np.isnan(theta))
 
 print("Aantal reconstructions : %d " % (len(recs)))
-
 
 lla = HiSPARCStations(STATIONS).get_lla_coordinates()
 lat, lon, alt = lla
@@ -90,13 +94,8 @@ dec = np.degrees(events[:, 1])
 steelpan = np.array([[13.792222, 49.3167], [13.398889, 54.9333], [12.900556, 55.95],
                      [12.257222, 57.0333], [11.896944, 53.7000], [11.030833, 56.3833],
                      [11.062222, 61.7500], [12.257222, 57.0333]])
-# Melkweg contouren als lijst van RA, DEC paren.
-# `milky_way.npy` heeft *geen* verbinding tussen RA 23h59 en 0h00 en `milky_way_polar.npy` wel.
-try:
-    mw_contour = np.load('milky_way.npy')
-    mw_contour_polar = np.load('milky_way_polar.npy')
-except:
-    mw_contour = mw_contour_polar = []
+
+mw_contour = mw_contour_polar = []
 
 t2 = time.time()
 print('Getting to the plots took: %.2f' % (t2-t1))
@@ -135,11 +134,6 @@ def plot_events_on_mollweide(events, filename=None):
     k = kde.gaussian_kde([x, y])
     xi, yi = np.mgrid[x.min():x.max():nbins * 1j, y.min():y.max():nbins * 1j]
     zi = k(np.vstack([xi.flatten(), yi.flatten()]))
-
-    # Make the plot
-    # ax.scatter(-events[:, 0], events[:, 1], marker='x')
-    # plt.pcolormesh(xi, yi, zi.reshape(xi.shape))
-    # plt.pcolormesh(xi, yi, zi.reshape(xi.shape), cmap=plt.cm.Greens_r)
     """ 
     Colormaps: https://matplotlib.org/examples/color/colormaps_reference.html
     jet
@@ -147,6 +141,8 @@ def plot_events_on_mollweide(events, filename=None):
     """
     plt.pcolormesh(xi, yi, zi.reshape(xi.shape), cmap=plt.cm.jet, alpha=1)
     plt.colorbar(shrink=0.5, pad=0.01)
+    if show_events:
+        ax.scatter(-events[:, 0], events[:, 1], marker='x', alpha=.5, color='grey', label='events')
 
     # plot milky way contours
     for ra_mw, dec_mw in mw_contour:
@@ -170,9 +166,10 @@ def plot_events_on_mollweide(events, filename=None):
     print('Plotting took: %.2f' % (t3-t2))
     print('Total run time: %.2f' % (t3 - t0))
     plt.grid(alpha=.2)
-    plt.xlabel('Rechte klimming [h]')
-    plt.ylabel('Declinatie [°]')
+    plt.xlabel('Rechte klimming [h]', fontsize='large')
+    plt.ylabel('Declinatie [°]', fontsize='large')
     plt.tight_layout()
+    #plt.legend()
     plt.show()
 
     if filename:
