@@ -23,8 +23,8 @@ DATAFILE = 'coinc.h5'
 # STATIONS = [501, 502, 503, 505, 506, 508, 509, 510, 511]
 STATIONS = [305, 304, 301]  # 1,75 km uit elkaar
 
-START = datetime(2016, 12, 1)
-END = datetime(2018, 3, 1)
+START = datetime(2017, 1, 1)
+END = datetime(2018, 1, 1)
 N = 3  # Voor reconstructions minimum N=3
 
 force_datafile_overwrite = True
