@@ -18,17 +18,18 @@ import os
 
 # 2017 1 1 naar 2017 1 2 met N=9 geeft mooie resultaten met stations 501 502 503 505
 
-START = datetime(2012, 2, 1)
-END = datetime(2018, 3, 1)
-N = 3
+START = datetime(2016, 12, 1)
+END = datetime(2017, 1, 1)
+N = 2
 
-file_name = 'science_park4 verste langst'
+file_name = 'coinc'
 dir = 'data\\coincidences\\'
 DATAFILE = dir+file_name+'.h5'
 # STATIONS = [501, 502, 503, 505, 506, 508, 509, 510, 511]
-STATIONS = [505, 509, 504, 502]
+STATIONS = [505, 509]
 
 overwrite = True
+reconstruct = False
 
 if __name__ == '__main__':
     if overwrite:
@@ -45,9 +46,12 @@ if __name__ == '__main__':
     if '/coincidences' not in data:
         print('Downloading coincidences')
         download_coincidences(data, stations=STATIONS, start=START, end=END, n=N)
-    if '/coincidences/reconstructions' not in data:
+    if ('/coincidences/reconstructions' not in data) & reconstruct:
         print('Creating reconstructions')
         rec = ReconstructESDCoincidences(data, overwrite=True)
         rec.reconstruct_and_store()
+    if len(data.root.coincidences.coincidences) == 0:
+        print('Aantel showers == 0')
+        exit()
 
 print("Aantal showers (coincidenties n=%d stations): %d " % (N, len(data.root.coincidences.coincidences)))

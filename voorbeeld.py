@@ -18,13 +18,14 @@ import os
 
 DATAFILE = 'coinc.h5'
 # STATIONS = [501, 502, 503, 505, 506, 508, 509, 510, 511]
-STATIONS = [505, 509, 504, 502]
+STATIONS = [501, 502, 503, 24]
 
 # 2017 1 1 naar 2017 1 2 met N=9 geeft mooie resultaten met stations 501 502 503 505
-START = datetime(2012, 2, 1)
-END = datetime(2018, 3, 1)
+START = datetime(2017, 1, 1)
+END = datetime(2017, 1, 2)
 N = 4
 overwrite = False
+reconstruct = True
 
 if __name__ == '__main__':
     if overwrite:
@@ -41,18 +42,23 @@ if __name__ == '__main__':
     if '/coincidences' not in data:
         print('Downloading coincidences')
         download_coincidences(data, stations=STATIONS, start=START, end=END, n=N)
-    if '/coincidences/reconstructions' not in data:
+    if len(data.root.coincidences.coincidences) == 0:
+        print('Aantel showers == 0')
+        exit()
+    if ('/coincidences/reconstructions' not in data) & reconstruct:
         print('Creating reconstructions')
         rec = ReconstructESDCoincidences(data, overwrite=True)
         rec.reconstruct_and_store()
-
-#print(data)
 
 print("Aantal showers (coincidenties n=%d stations): %d " % (N, len(data.root.coincidences.coincidences)))
 
 recs = data.root.coincidences.reconstructions.read()
 theta = recs['zenith']
 recs = recs.compress(~np.isnan(theta))
+
+if len(recs) == 0:
+    print('Aantel recs == 0')
+    exit()
 
 lla = HiSPARCStations(STATIONS).get_lla_coordinates()
 lat, lon, alt = lla
@@ -66,7 +72,8 @@ for rec in pbar(recs):
     r, d = zenithazimuth_to_equatorial(lat, lon, timestamp, theta, phi)
     events.append((r-np.pi, d))
 events = np.array(events)
-
+print('-----')
+print(events)
 ra = np.degrees(events[:, 0])
 
 dec = np.degrees(events[:, 1])
