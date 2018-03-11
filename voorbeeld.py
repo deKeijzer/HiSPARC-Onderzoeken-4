@@ -20,21 +20,21 @@ import time
 t0 = time.time()
 
 DATAFILE = 'coinc.h5'
-#STATIONS = [501, 502, 503, 505, 506, 508, 509, 510, 511]
+STATIONS = [501, 502, 503, 505, 506, 508, 509, 510, 511]
 #STATIONS = [305, 304, 301]  # 1,75 km uit elkaar
 
 """
-Waarschijnlijk moeten stations uit nijmegen gebruikt worden, deze zijn het oudst
+Waarschijnlijk moeten stations uit nijmegen gebruikt worden, deze zijn het oudst (data vanaf 2014).
 """
 
-STATIONS = [8001, 8004, 8009, 8008]
+#STATIONS = [2003, 2004, 2005, 2008, 2001, 2002, 2006]
 
-START = datetime(2014, 3, 1)
-END = datetime(2017, 6, 2)
-N = 4  # Voor reconstructions minimum N=3
+START = datetime(2016, 1, 1)
+END = datetime(2018, 1, 2)
+N = 3  # Voor reconstructions minimum N=3
 
-force_datafile_overwrite = True
-show_events = True
+force_datafile_overwrite = False
+show_events = False
 
 if __name__ == '__main__':
     if force_datafile_overwrite:
@@ -108,7 +108,6 @@ def plot_events_on_mollweide(events, filename=None):
     # geplot.
 
     events = np.array(events)
-    print(events)
 
     fig = plt.figure(figsize=(15, 15))
     #fig = plt.figure()
@@ -130,7 +129,7 @@ def plot_events_on_mollweide(events, filename=None):
     y = events[:, 1]
 
     # Evaluate a gaussian kde on a regular grid of nbins x nbins over data extents
-    nbins = 100
+    nbins = 200
     k = kde.gaussian_kde([x, y])
     xi, yi = np.mgrid[x.min():x.max():nbins * 1j, y.min():y.max():nbins * 1j]
     zi = k(np.vstack([xi.flatten(), yi.flatten()]))
@@ -165,7 +164,7 @@ def plot_events_on_mollweide(events, filename=None):
     t3 = time.time()
     print('Plotting took: %.2f' % (t3-t2))
     print('Total run time: %.2f' % (t3 - t0))
-    plt.grid(alpha=.2)
+    plt.grid(alpha=.3)
     plt.xlabel('Rechte klimming [h]', fontsize='large')
     plt.ylabel('Declinatie [°]', fontsize='large')
     plt.tight_layout()
@@ -176,7 +175,7 @@ def plot_events_on_mollweide(events, filename=None):
         plt.savefig(filename, dpi=200)
 
 
-plot_events_on_mollweide(events, filename='figuren\\noordelijke hemel mollweide.png')
+plot_events_on_mollweide(events, filename='figuren\\noordelijke_hemel_mollweide.png')
 
 #plot_events_polar(events, filename='figuren\\noordelijke hemel polar.png')
 
