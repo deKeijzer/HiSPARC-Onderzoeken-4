@@ -15,24 +15,31 @@ from sapphire import (download_coincidences, ReconstructESDCoincidences, HiSPARC
 from sapphire.utils import pbar
 from sapphire.transformations.celestial import zenithazimuth_to_equatorial
 import os
+import time
 
-# 2017 1 1 naar 2017 1 2 met N=9 geeft mooie resultaten met stations 501 502 503 505
+t0 = time.time()
+
+DATAFILE = 'coinc.h5'
+#STATIONS = [501, 502, 503, 505, 506, 508, 509, 510, 511] # science park
+STATIONS = [501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511]  # science park cluster
+
+#STATIONS = [305, 304, 301]  # 1,75 km uit elkaar
+
+"""
+Waarschijnlijk moeten stations uit nijmegen gebruikt worden, deze zijn het oudst (data vanaf 2014).
+"""
+
+#STATIONS = [2003, 2004, 2005, 2008, 2001, 2002, 2006]
 
 START = datetime(2016, 3, 1)
-END = datetime(2017, 1, 1)
-N = 9
+END = datetime(2018, 1, 2)
+N = 11  # Voor reconstructions minimum N=3
 
-file_name = 'coinc'
-dir = 'data\\coincidences\\'
-DATAFILE = dir+file_name+'.h5'
-STATIONS = [501, 502, 503, 505, 506, 508, 509, 510, 511]
-#STATIONS = [505, 509]
-
-overwrite = True
-reconstruct = False
+force_datafile_overwrite = True
+show_events = False
 
 if __name__ == '__main__':
-    if overwrite:
+    if force_datafile_overwrite:
         try:
             print('Deleting data file')
             os.remove(DATAFILE)
@@ -46,12 +53,18 @@ if __name__ == '__main__':
     if '/coincidences' not in data:
         print('Downloading coincidences')
         download_coincidences(data, stations=STATIONS, start=START, end=END, n=N)
-    if ('/coincidences/reconstructions' not in data) & reconstruct:
+    if len(data.root.coincidences.coincidences) == 0:
+        print('Aantel showers == 0, exit()')
+        exit()
+    if '/coincidences/reconstructions' not in data:
         print('Creating reconstructions')
         rec = ReconstructESDCoincidences(data, overwrite=True)
         rec.reconstruct_and_store()
-    if len(data.root.coincidences.coincidences) == 0:
-        print('Aantel showers == 0')
+    if len(data.root.coincidences.reconstructions.read()) == 0:
+        print('Aantel recs == 0, exit()')
         exit()
+
+t1 = time.time()
+print('Datafile preperation took: %.2f' % (t1-t0))
 
 print("Aantal showers (coincidenties n=%d stations): %d " % (N, len(data.root.coincidences.coincidences)))

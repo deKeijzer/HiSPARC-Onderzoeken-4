@@ -20,7 +20,8 @@ import time
 t0 = time.time()
 
 DATAFILE = 'coinc.h5'
-STATIONS = [501, 502, 503, 505, 506, 508, 509, 510, 511]
+#STATIONS = [501, 502, 503, 505, 506, 508, 509, 510, 511] # science park
+STATIONS = [501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511]  # science park cluster
 #STATIONS = [305, 304, 301]  # 1,75 km uit elkaar
 
 """
@@ -29,9 +30,9 @@ Waarschijnlijk moeten stations uit nijmegen gebruikt worden, deze zijn het oudst
 
 #STATIONS = [2003, 2004, 2005, 2008, 2001, 2002, 2006]
 
-START = datetime(2016, 1, 1)
+START = datetime(2016, 3, 1)
 END = datetime(2018, 1, 2)
-N = 3  # Voor reconstructions minimum N=3
+N = 11  # Voor reconstructions minimum N=3
 
 force_datafile_overwrite = False
 show_events = False
@@ -169,10 +170,10 @@ def plot_events_on_mollweide(events, filename=None):
     plt.ylabel('Declinatie [°]', fontsize='large')
     plt.tight_layout()
     #plt.legend()
-    plt.show()
 
     if filename:
         plt.savefig(filename, dpi=200)
+    plt.show()
 
 
 plot_events_on_mollweide(events, filename='figuren\\noordelijke_hemel_mollweide.png')
