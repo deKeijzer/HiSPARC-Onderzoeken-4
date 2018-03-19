@@ -30,7 +30,7 @@ Waarschijnlijk moeten stations uit nijmegen gebruikt worden, deze zijn het oudst
 
 #STATIONS = [2003, 2004, 2005, 2008, 2001, 2002, 2006]
 
-START = datetime(2016, 3, 1)
+START = datetime(2018, 1, 1)
 END = datetime(2018, 1, 2)
 N = 11  # Voor reconstructions minimum N=3
 
@@ -95,8 +95,15 @@ dec = np.degrees(events[:, 1])
 steelpan = np.array([[13.792222, 49.3167], [13.398889, 54.9333], [12.900556, 55.95],
                      [12.257222, 57.0333], [11.896944, 53.7000], [11.030833, 56.3833],
                      [11.062222, 61.7500], [12.257222, 57.0333]])
-
-mw_contour = mw_contour_polar = []
+# Melkweg contouren als lijst van RA, DEC paren.
+# `milky_way.npy` heeft *geen* verbinding tussen RA 23h59 en 0h00 en `milky_way_polar.npy` wel.
+try:
+    mw_contour = np.load('milky_way.npy')
+    mw_contour_polar = np.load('milky_way_polar.npy')
+    print('Loaded .npy files')
+except:
+    mw_contour = mw_contour_polar = []
+    print('Failed to load .npy files')
 
 t2 = time.time()
 print('Getting to the plots took: %.2f' % (t2-t1))
@@ -120,6 +127,10 @@ def plot_events_on_mollweide(events, filename=None):
     ax.tick_params(axis='x', colors='white')
     ax.xaxis.label.set_color('white')
     ax.xaxis.set_label_coords(.5, .49)
+
+    # plot milky way contours
+    for ra_mw, dec_mw in mw_contour:
+        ax.plot(-ra_mw, dec_mw, color='grey')
 
     """
     Plot bron:

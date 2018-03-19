@@ -31,8 +31,8 @@ Waarschijnlijk moeten stations uit nijmegen gebruikt worden, deze zijn het oudst
 
 #STATIONS = [2003, 2004, 2005, 2008, 2001, 2002, 2006]
 
-START = datetime(2016, 3, 1)
-END = datetime(2018, 1, 2)
+START = datetime(2017, 1, 1)
+END = datetime(2018, 1, 1)
 N = 11  # Voor reconstructions minimum N=3
 
 force_datafile_overwrite = True
