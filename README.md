@@ -1,14 +1,14 @@
 # Onderzoeken 4 - HiSPARC
 Dit is de Python code welke gebruikt is bij het vak Onderzoeken 4.
-Hierbij word er gebruik gemaakt van Jupyter Notebook.
-Het hoofdonderdeel van de code is [dit bestand](main.ipynb), de rest van de mappen dient als werkomgeving.
+De code is [hier](main.ipynb) in de vorm van een Jupyter Notebook te vinden.
+De overige bestanden en mappen dienen als werkomgeving.
 
 ## Onderzoeksvraag
-Kunnen de [i]ultrahigh-energy[/i] deeltjes afkomstig van de Grote Beer worden waargenomen met HiSPARC?
+Kan de *hotspot* van hoog-energetische (E>57 EeV) kosmische straling zoals is waargenomen door [the Surface Detector of the Telescope Array Experiment](https://arxiv.org/abs/1404.5890) worden waargenomen door middel van HiSPARC?
 
 ## Resultaten
 De volgende resultaten zijn verkregen:
 
-![alt text](figuren/Resultaat.png)
+![alt text](figuren/resultaat.png)
 
 De gebruikte data is van 2015-06-02 tot 2018-01-01 met een coincidentie van 3 bij de volgende stations: 501, 502, 508, 510, 511.
