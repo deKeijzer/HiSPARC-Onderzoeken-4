@@ -4,7 +4,7 @@ De code is [hier](main.ipynb) in de vorm van een Jupyter Notebook te vinden.
 De overige bestanden en mappen dienen als werkomgeving.
 
 ## Onderzoeksvraag
-Kan de *anisotropy* van de afkomst richting van kosmische straling met een energie groter dan 57 EeV, zoals is waargenomen door [the Surface Detector of the Telescope Array Experiment](https://arxiv.org/abs/1404.5890), worden waargenomen met HiSPARC?
+Kan de anisotropie van de afkomst richting van kosmische straling met een energie groter dan 57 EeV, zoals is waargenomen door *[the Surface Detector of the Telescope Array Experiment](https://arxiv.org/abs/1404.5890)*, worden waargenomen met HiSPARC?
 
 ## Resultaten
 De volgende resultaten zijn verkregen:
