@@ -10,6 +10,6 @@ Kan de anisotropie van de afkomst richting van kosmische straling met een energi
 ## Resultaten
 De volgende resultaten zijn verkregen:
 
-![alt text](figuren/resultaat.png)
+![alt text](figuren/Resultaat.png)
 
 De gebruikte data is van 2015-06-02 tot 2018-01-01 met een coincidentie van 3 bij de volgende stations: 501, 502, 508, 510, 511. De grijze lijn zijn de melkweg contouren.
