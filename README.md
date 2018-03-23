@@ -9,4 +9,4 @@ Kunnen de [i]ultrahigh-energy[/i] deeltjes afkomstig van de Grote Beer worden wa
 ## Verkregen resultaten
 De volgende resultaten zijn verkregen:
 
-![alt text](figuren/sciencepark 2015-06-02 2018-01-01 - 501, 502, 508, 510, 511 - N=3.png)
+![alt text](figuren/Resultaat.png)
