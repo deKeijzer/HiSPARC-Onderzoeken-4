@@ -1,6 +1,5 @@
-[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/deKeijzer/HiSPARC-Onderzoeken-4/master)
-
 # Onderzoeken 4 - HiSPARC
+[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/deKeijzer/HiSPARC-Onderzoeken-4/master)
 Dit is de Python code welke gebruikt is bij het vak Onderzoeken 4.
 De code is [hier](main.ipynb) in de vorm van een Jupyter Notebook te vinden.
 De overige bestanden en mappen dienen als werkomgeving.
